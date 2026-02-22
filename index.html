@@ -3,202 +3,126 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Elif 💖</title>
+<title>Elif ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
-body{
-margin:0;
-overflow:hidden;
-background:black;
-font-family:'Segoe UI',sans-serif;
-color:white;
+body {
+  margin:0;
+  overflow:hidden;
+  height:100vh;
+  background: radial-gradient(circle at bottom, #0d1b2a 0%, #000 70%);
+  font-family: 'Great Vibes', cursive;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  color:white;
 }
 
-canvas{
-position:fixed;
-top:0;
-left:0;
-z-index:-1;
+/* Yıldızlar */
+.stars {
+  position:absolute;
+  width:100%;
+  height:100%;
+  background: url("https://www.transparenttextures.com/patterns/stardust.png");
+  animation: moveStars 60s linear infinite;
+  opacity:0.4;
 }
 
-.container{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-text-align:center;
+@keyframes moveStars {
+  from {background-position:0 0;}
+  to {background-position:10000px 5000px;}
 }
 
-h1{
-font-size:65px;
-text-shadow:0 0 20px #ff4da6,
-0 0 40px #ff0080,
-0 0 80px #ff66cc;
-animation:pulse 2s infinite alternate;
+.container {
+  position:relative;
+  z-index:2;
+  padding:30px;
 }
 
-@keyframes pulse{
-from{transform:scale(1);}
-to{transform:scale(1.1);}
+h1 {
+  font-size:45px;
+  text-shadow:0 0 20px #ff4d6d, 0 0 40px #ff4d6d;
 }
 
-.loveText span{
-display:block;
-font-size:24px;
-margin:8px 0;
-letter-spacing:2px;
-text-shadow:0 0 10px #ff4da6,
-0 0 20px #ff0080,
-0 0 40px #ff66cc;
+button {
+  margin-top:30px;
+  padding:15px 40px;
+  font-size:20px;
+  border:none;
+  border-radius:40px;
+  background:linear-gradient(45deg,#ff4d6d,#ff758f);
+  color:white;
+  cursor:pointer;
+  box-shadow:0 0 20px #ff4d6d;
+  transition:0.3s;
 }
 
-.loveText .big{
-font-size:32px;
-font-weight:bold;
-margin-top:12px;
-text-shadow:0 0 20px white,
-0 0 50px #ff0080;
+button:hover {
+  transform:scale(1.1);
+  box-shadow:0 0 40px #ff4d6d;
 }
 
-button{
-padding:15px 40px;
-border-radius:50px;
-border:none;
-font-size:20px;
-font-weight:bold;
-cursor:pointer;
-margin:15px;
-transition:0.3s;
+/* Konfeti */
+.confetti {
+  position:absolute;
+  width:10px;
+  height:10px;
+  background:red;
+  top:-10px;
+  animation: fall 5s linear infinite;
 }
 
-.yes{
-background:white;
-color:#ff0080;
-box-shadow:0 0 30px white;
-}
-
-.no{
-background:#ff0080;
-color:white;
-position:absolute;
-}
-
-button:hover{
-transform:scale(1.2);
+@keyframes fall {
+  to {
+    transform: translateY(100vh) rotate(720deg);
+  }
 }
 </style>
 </head>
-
 <body>
 
-<canvas id="galaxy"></canvas>
+<div class="stars"></div>
 
 <div class="container">
-<h1>Elif 💖</h1>
+  <h1>
+  Dünya döndükçe, kalbim attıkça…<br>
+  Benimle beraber olmaya var mısın Elif? ❤️
+  </h1>
 
-<div class="loveText">
-<span>Dünya döndükçe...</span>
-<span>Kalbim attıkça...</span>
-<span class="big">Benimle beraber olmaya var mısın?</span>
-</div>
-
-<button class="yes" onclick="loveExplosion()">EVET 💍</button>
-<button class="no" id="hayir">Hayır 💔</button>
+  <button onclick="showConfetti()">Evet 💖</button>
 </div>
 
 <audio id="bgMusic" loop>
-<source src="muzik.mp3" type="audio/mpeg">
+  <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-// MÜZİK MOBİL FIX
-document.addEventListener("click", function(){
-const music=document.getElementById("bgMusic");
-music.play().catch(()=>{});
-},{once:true});
+const music = document.getElementById("bgMusic");
 
-// GALAXY
-const canvas=document.getElementById("galaxy");
-const ctx=canvas.getContext("2d");
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
-
-let stars=[];
-let shooting=[];
-
-for(let i=0;i<500;i++){
-stars.push({
-x:Math.random()*canvas.width,
-y:Math.random()*canvas.height,
-r:Math.random()*1.5,
-speed:Math.random()*0.5
-});
+/* İlk dokunuşta müzik başlar */
+function startMusic() {
+  music.play().catch(()=>{});
+  document.removeEventListener("click", startMusic);
 }
+document.addEventListener("click", startMusic);
 
-function createShooting(){
-shooting.push({
-x:Math.random()*canvas.width,
-y:0,
-len:Math.random()*80+40,
-speed:8
-});
-}
-setInterval(createShooting,3000);
+/* Konfeti yağmuru */
+function showConfetti(){
+  for(let i=0;i<150;i++){
+    let conf = document.createElement("div");
+    conf.classList.add("confetti");
+    conf.style.left = Math.random()*100+"vw";
+    conf.style.background = "hsl(" + Math.random()*360 + ",100%,50%)";
+    conf.style.animationDuration = (Math.random()*3+2)+"s";
+    document.body.appendChild(conf);
 
-function draw(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-let gradient=ctx.createRadialGradient(
-canvas.width/2,canvas.height/2,100,
-canvas.width/2,canvas.height/2,canvas.width
-);
-gradient.addColorStop(0,"rgba(255,0,150,0.3)");
-gradient.addColorStop(1,"black");
-ctx.fillStyle=gradient;
-ctx.fillRect(0,0,canvas.width,canvas.height);
-
-ctx.fillStyle="white";
-stars.forEach(star=>{
-ctx.beginPath();
-ctx.arc(star.x,star.y,star.r,0,Math.PI*2);
-ctx.fill();
-star.y+=star.speed;
-if(star.y>canvas.height){star.y=0;}
-});
-
-ctx.strokeStyle="white";
-shooting.forEach((s,i)=>{
-ctx.beginPath();
-ctx.moveTo(s.x,s.y);
-ctx.lineTo(s.x-s.len,s.y+s.len);
-ctx.stroke();
-s.y+=s.speed;
-if(s.y>canvas.height){shooting.splice(i,1);}
-});
-
-requestAnimationFrame(draw);
-}
-draw();
-
-// KAÇAN HAYIR
-document.getElementById("hayir").onmouseover=function(){
-this.style.top=Math.random()*80+"%";
-this.style.left=Math.random()*80+"%";
-};
-
-// EVET PATLAMA
-function loveExplosion(){
-for(let i=0;i<80;i++){
-let heart=document.createElement("div");
-heart.innerHTML="💖";
-heart.style.position="fixed";
-heart.style.left="50%";
-heart.style.top="50%";
-heart.style.fontSize=(20+Math.random()*40)+"px";
-heart.style.transform=`translate(${Math.random()*1000-500}px,${Math.random()*1000-500}px)`;
-document.body.appendChild(heart);
-setTimeout(()=>heart.remove(),2000);
-}
+    setTimeout(()=>{
+      conf.remove();
+    },5000);
+  }
 }
 </script>
 
