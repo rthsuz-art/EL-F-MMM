@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elif 💖</title>
+
+<style>
+body {
+  margin:0;
+  overflow:hidden;
+  background:black;
+  font-family:'Segoe UI', sans-serif;
+  color:white;
+}
+
+canvas {
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:-1;
+}
+
+.container {
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  animation: float 4s ease-in-out infinite alternate;
+}
+
+@keyframes float {
+  from { transform: translate(-50%,-52%); }
+  to { transform: translate(-50%,-48%); }
+}
+
+h1 {
+  font-size:80px;
+  text-shadow:0 0 20px #ff4da6,
+              0 0 40px #ff0080,
+              0 0 80px #ff66cc,
+              0 0 150px #ff0080;
+  animation: pulse 2s infinite alternate;
+}
+
+@keyframes pulse {
+  from { transform:scale(1); }
+  to { transform:scale(1.1); }
+}
+
+.loveText span {
+  display:block;
+  font-size:28px;
+  margin:10px 0;
+  letter-spacing:2px;
+  animation: fadeIn 3s ease forwards;
+  text-shadow:0 0 10px #ff4da6,
+              0 0 20px #ff0080,
+              0 0 40px #ff66cc;
+}
+
+.loveText .big {
+  font-size:38px;
+  font-weight:bold;
+  margin-top:15px;
+  text-shadow:0 0 20px white,
+              0 0 50px #ff0080,
+              0 0 100px #ff66cc;
+}
+
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(20px); }
+  to { opacity:1; transform:translateY(0); }
+}
+
+button {
+  padding:15px 45px;
+  border-radius:50px;
+  border:none;
+  font-size:22px;
+  font-weight:bold;
+  cursor:pointer;
+  margin:20px;
+  transition:0.3s;
+}
+
+.yes {
+  background:white;
+  color:#ff0080;
+  box-shadow:0 0 30px white, 0 0 60px #ff0080;
+}
+
+.no {
+  background:#ff0080;
+  color:white;
+  position:absolute;
+}
+
+button:hover {
+  transform:scale(1.2);
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="galaxy"></canvas>
+
+<div class="container">
+  <h1>Elif 💖</h1>
+
+  <div class="loveText">
+    <span>Dünya döndükçe...</span>
+    <span>Kalbim attıkça...</span>
+    <span class="big">Benimle beraber olmaya var mısın?</span>
+  </div>
+
+  <button class="yes" onclick="loveExplosion()">EVET 💍</button>
+  <button class="no" id="hayir">Hayır 💔</button>
+</div>
+
+<audio autoplay loop>
+  <source src="muzik.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const canvas = document.getElementById("galaxy");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let stars = [];
+let shootingStars = [];
+let mouseX = 0;
+let mouseY = 0;
+
+document.addEventListener("mousemove", e=>{
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+for(let i=0;i<600;i++){
+  stars.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    r:Math.random()*1.5,
+    speed:Math.random()*0.5
+  });
+}
+
+function createShootingStar(){
+  shootingStars.push({
+    x:Math.random()*canvas.width,
+    y:0,
+    len:Math.random()*80+50,
+    speed:8
+  });
+}
+setInterval(createShootingStar,3000);
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  let gradient = ctx.createRadialGradient(
+    mouseX, mouseY, 50,
+    canvas.width/2, canvas.height/2, canvas.width
+  );
+  gradient.addColorStop(0,"rgba(255,0,150,0.3)");
+  gradient.addColorStop(1,"black");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  ctx.fillStyle="white";
+  stars.forEach(star=>{
+    ctx.beginPath();
+    ctx.arc(star.x,star.y,star.r,0,Math.PI*2);
+    ctx.fill();
+    star.y+=star.speed;
+    if(star.y>canvas.height){star.y=0;}
+  });
+
+  ctx.strokeStyle="white";
+  shootingStars.forEach((s,i)=>{
+    ctx.beginPath();
+    ctx.moveTo(s.x,s.y);
+    ctx.lineTo(s.x-s.len,s.y+s.len);
+    ctx.stroke();
+    s.y+=s.speed;
+    if(s.y>canvas.height){shootingStars.splice(i,1);}
+  });
+
+  requestAnimationFrame(draw);
+}
+draw();
+
+document.getElementById("hayir").onmouseover=function(){
+  this.style.top=Math.random()*80+"%";
+  this.style.left=Math.random()*80+"%";
+};
+
+function loveExplosion(){
+  document.body.style.background="white";
+  setTimeout(()=>{document.body.style.background="black";},200);
+
+  for(let i=0;i<100;i++){
+    let heart=document.createElement("div");
+    heart.innerHTML="💖";
+    heart.style.position="fixed";
+    heart.style.left="50%";
+    heart.style.top="50%";
+    heart.style.fontSize=(20+Math.random()*40)+"px";
+    heart.style.transform=`translate(${Math.random()*1000-500}px,${Math.random()*1000-500}px)`;
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),2000);
+  }
+}
+</script>
+
+</body>
+  </html>
